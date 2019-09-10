@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+    <section style="text-align:center">
+        <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et temporibus, hic consectetur quisquam accusantium nobis tenetur voluptates fugiat sunt laborum consequuntur, reprehenderit animi officia aut est cumque natus magni nisi.</h1>
+    </section>
+    <section>
+        <button onclick="start()">start</button>
+        <button onclick="add(10)">add 10</button>
+        <button onclick="done()">done</button>
+    </section>
+    <section id="topbar">
+        <div class="bar">
+            <div class="barshadow"></div>
+        </div>
+    </section>
+    <script src="./src/main.js"></script>
+    <script>
+        const bar = new topProgress({
+            color: '#c471f5'
+        });
+        function start () {
+            bar.start();
+        }
+        function add(x) {
+            bar.add(x);
+        }
+        function done () {
+            bar.done();
+        }
+    </script>
+</body>
+</html>
