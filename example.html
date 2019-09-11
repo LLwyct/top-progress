@@ -5,25 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="./src/style.css">
+    <link rel="stylesheet" href="./src/tp.style.css">
 </head>
 <body>
     <section style="text-align:center">
         <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et temporibus, hic consectetur quisquam accusantium nobis tenetur voluptates fugiat sunt laborum consequuntur, reprehenderit animi officia aut est cumque natus magni nisi.</h1>
     </section>
-    <section>
+    <section style="text-align:center">
         <button onclick="start()">start</button>
         <button onclick="add(10)">add 10</button>
         <button onclick="done()">done</button>
     </section>
-    <section id="topbar">
-        <div class="bar">
-            <div class="barshadow"></div>
-        </div>
-    </section>
-    <script src="./src/main.js"></script>
+    <script src="./src/tp.js"></script>
     <script>
-        const bar = new topProgress({
+        const bar = new TP({
+            mount: 'body',
             color: '#c471f5'
         });
         function start () {
