@@ -7,36 +7,48 @@
 </template>
 
 <script>
-import { callbackify } from 'util';
 export default {
     data () {
         return {
             state: 'stop',
             lengthpercent: 0,
             main: null,
-            speed: 800
+            settings: {
+                speed: 1,
+                width: 2,
+                color: 'lightblue',
+            }
         }
     },
     methods: {
         init () {
             this.state                = 'stop';
             this.lengthpercent        = 0;
-            this.main.style.transform = `translate3d(-100%,0px,0px)`;
+            this.main.style.transform = `translateX(-100%)`;
+            this.main.style.opacity   = '0';
         },
-        setConfig () {
-            // this.main.style.color     = options.color || 'lightblue';
+        setSettings (options = {}) {
+            if (Object.keys(options).length === 0) {
+                return;
+            } else {
+                for (let key in options) {
+                    this.settings[key] = options[key];
+                }
+            }
         },
         changeto (pos) {
             if (pos >= 0 && pos <= 100) {
+                this.main.style.opacity   = '1';
                 this.lengthpercent = pos;
-                this.main.style.transform = `translate3d(-${100 - pos}%,0px,0px)`;
+                this.main.style.transform = `translateX(-${100 - pos}%)`;
                 return this;
             }
         },
         start () {
             this.state = "run";
             let that = this;
-            function run() {
+            function run(after) {
+                if (after) {}
                 setTimeout(() => {
                     if (that.state === 'stop') {
                         return;
@@ -56,8 +68,9 @@ export default {
                     }
                     run();
                     return;
-                }, that.speed)
+                }, 800)
             }
+            that.changeto(that.lengthpercent + 10);
             run();
         },
         add (length) {
@@ -76,8 +89,10 @@ export default {
         }
     },
     mounted () {
-        // console.log(this.$refs.tp);
         this.main = this.$refs.tp;
+        this.main.style.backgroundColor = this.settings.color;
+        this.main.style.transition = `transform ${this.settings.speed}s ease-out, opacity .3s ease`;
+        this.main.style.height = `${this.settings.width}px`;
     }
 }
 </script>
@@ -90,8 +105,8 @@ export default {
     background-color: lightblue;
     width: 100%;
     height: 2px;
-    transform: translate3d(-100%,0,0);
-    transition: transform 1s ease-out;
+    transform: translateX(-100%);
+    transition: transform 1s ease-out, opacity .1s ease;
 }
 
 #topbar .bar .barshadow {
