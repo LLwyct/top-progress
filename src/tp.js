@@ -13,7 +13,7 @@ class TP {
 
         this.options = options;
         this.lengthpercent = 0;
-        this.state = 'stop'
+        this.state = 'stop';
     }
 
     insertElement(fatherelement) {
