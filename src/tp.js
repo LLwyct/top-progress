@@ -3,7 +3,7 @@ class TP {
     constructor(options = {}) {
         this.mount = 'body';
         this.insertElement(this.mount);
-        this.main = document.querySelector('#topbar .bar');
+        this.main = document.querySelector('#topprogress .bar');
         this.main.style.backgroundColor = options.color || 'lightblue';
         this.main.style.height = options.width || '2px';
         if (options.speed) {
@@ -18,7 +18,7 @@ class TP {
 
     insertElement(fatherelement) {
         let topbar = document.createElement('section');
-        topbar.setAttribute('id', 'topbar');
+        topbar.setAttribute('id', 'topprogress');
         topbar.innerHTML = `
             <div class="bar">
                 <div class="barshadow"></div>
