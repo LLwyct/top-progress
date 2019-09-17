@@ -20,12 +20,13 @@ this is a very very very light weight web progressbar at the top of the document
     options:
      - color：进度条的颜色，默认为'lightblue'
      - width：宽度，默认为'2px'
-     - speed；好像有bug，懒得改了，建议别调（类型为字符串，单位s）
+     - speed；类型为字符串，单位s
+     - mount：挂载到哪个元素上，默认为body，格式符合querySelector
 
 3. 提供start、done、add三个函数
     - void start()：进度条滚动，若不主动执行done，则会越来越慢
     - void done()：进度条滚动到底，并且初始化
-    - int add(len)：无条件增加len%，最大值为100%
+    - int add(len)(废弃)：无条件增加len%，最大值为100%
 
 4. example
     ```html
@@ -34,7 +35,8 @@ this is a very very very light weight web progressbar at the top of the document
         const bar = new TP({
             color: '#c471f5',
             width: '2px',
-            speed: '1'
+            mount: 'body',
+            speed: '1',
         });
         function start () {
             bar.start();
@@ -48,7 +50,7 @@ this is a very very very light weight web progressbar at the top of the document
     </script>
     ```
 ### 在Vue中使用
-```html
+```js
 <!-- src/main.js -->
 import Vue from 'vue'
 import App from './App.vue'
@@ -64,7 +66,8 @@ Vue.config.productionTip = false
 let tp = new TP({
   color: 'red',
   width: '2px',
-  speed: '1'
+  speed: '1',
+  mount: 'body'
 })
 
 new Vue({
