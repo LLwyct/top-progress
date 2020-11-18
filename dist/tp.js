@@ -24,23 +24,33 @@ var TP = /** @class */ (function () {
         this.init();
     }
     TP.prototype.mount = function () {
+        /**
+         * 把tp挂载到body上
+         */
         var bodyelemet = document.querySelector('body');
         var topprogress = document.createElement('section');
+        topprogress.style.height = this.settings.width;
+        topprogress.style.transform = "translateX(-100%)";
+        topprogress.style.backgroundColor = this.settings.color;
         topprogress.setAttribute('id', 'topprogress');
         topprogress.innerHTML = "\n        <div class=\"bar\">\n        <div class=\"barshadow\"></div>\n        </div>\n        ";
-        bodyelemet.appendChild(topprogress);
-        var res = document.querySelector('#topprogress .bar');
-        res.style.height = this.settings.width;
-        res.style.backgroundColor = this.settings.color;
-        return res;
+        /**
+         * 后续可以作为异常抛出
+         */
+        if (bodyelemet) {
+            bodyelemet.appendChild(topprogress);
+        }
+        return topprogress;
     };
     TP.prototype.init = function () {
-        this.main.style.transform = "translateX(-100%)";
         this.state = 'stop';
         this.lengthpercent = 0;
         this.main.style.transition = "transform " + this.settings.speed + "s ease";
     };
     TP.prototype.changeto = function (pos) {
+        /**
+         * 可以考虑写成观察者，在修改lengthpercent的同时，同步修改tp的translate属性
+         */
         if (pos >= 0 && pos <= 100) {
             this.lengthpercent = pos;
             this.main.style.transform = "translateX(-" + (100 - pos) + "%)";
@@ -50,37 +60,36 @@ var TP = /** @class */ (function () {
     TP.prototype.start = function () {
         this.state = 'run';
         var that = this;
-        this.changeto(this.lengthpercent + 10);
         function run() {
-            setTimeout(function () {
-                if (that.state === 'run') {
-                    if (that.lengthpercent <= 60 && that.lengthpercent >= 0) {
-                        that.changeto(that.lengthpercent + 10);
-                    }
-                    else if (that.lengthpercent <= 75) {
-                        that.changeto(that.lengthpercent + 5);
-                    }
-                    else if (that.lengthpercent <= 90) {
-                        that.changeto(that.lengthpercent + 3);
-                    }
-                    else if (that.lengthpercent <= 95) {
-                        that.changeto(that.lengthpercent + 1);
-                    }
-                    else {
-                        return;
-                    }
-                    run();
+            if (that.state === 'run') {
+                if (0 <= that.lengthpercent && that.lengthpercent <= 60) {
+                    that.changeto(that.lengthpercent + 10);
                 }
-                return;
-            }, Number(that.settings.speed) * 800);
+                else if (that.lengthpercent <= 75) {
+                    that.changeto(that.lengthpercent + 5);
+                }
+                else if (that.lengthpercent <= 90) {
+                    that.changeto(that.lengthpercent + 3);
+                }
+                else if (that.lengthpercent <= 95) {
+                    that.changeto(that.lengthpercent + 1);
+                }
+                else {
+                    return;
+                }
+                run();
+            }
         }
-        run();
+        requestAnimationFrame(run);
     };
     TP.prototype.done = function () {
         var _this = this;
         this.main.style.transition = "transform 0.5s ease";
         this.changeto(100);
-        setTimeout(function () { return _this.init(); }, Number(this.settings.speed) * 1000);
+        setTimeout(function () {
+            _this.lengthpercent = 0;
+            _this.changeto(0);
+        }, Number(this.settings.speed) * 1000);
     };
     return TP;
 }());

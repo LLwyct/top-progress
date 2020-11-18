@@ -3,7 +3,7 @@
 }
 
 #topprogress .bar {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     background-color: lightblue;
@@ -13,10 +13,11 @@
     transition: transform 1s ease;
 }
 
-.progressshadow {
-    width: 20px;
-    height: 100%;
+#topprogress .bar .barshadow {
+    background-color: black;
     position: absolute;
+    width: 20px;
+    height: 2px;
     top: 0;
     right: 0;
     opacity: 1;
