@@ -1,16 +1,22 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 #topprogress {
-    pointer-events: none;
+    position: fixed;
+    width: 100vw;
 }
 
 #topprogress .bar {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     background-color: lightblue;
     width: 100%;
     height: 2px;
     transform: translateX(-100%);
-    transition: transform 1s ease;
+    /* transition: transform 1s ease; */
 }
 
 #topprogress .bar .barshadow {
