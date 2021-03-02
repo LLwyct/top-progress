@@ -10,13 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 ;
 let defaultOptions = {
     mounted: 'body',
-    speed: '1s',
     width: '2px',
-    color: '#c471f5'
+    color: '#22d1ee'
 };
 class TP {
     constructor(inputoptions) {
         this.settings = defaultOptions;
+        /**
+         * 初始化进度条相关信息
+         */
         this.settings = Object.assign(Object.assign({}, this.settings), inputoptions);
         this.main = this.mount();
         this.init();
@@ -28,17 +30,11 @@ class TP {
         let bodyelemet = document.querySelector("body");
         let topprogress = document.createElement("section");
         topprogress.style.height = this.settings.width;
-        topprogress.style.transform = `translateX(-100%)`;
         topprogress.style.backgroundColor = this.settings.color;
         topprogress.setAttribute("id", "topprogress");
         topprogress.innerHTML = `
-                <div class="bar">
                     <div class="barshadow"></div>
-                </div>
             `;
-        /**
-         * 后续可以作为异常抛出
-         */
         if (bodyelemet) {
             bodyelemet.append(topprogress);
         }
@@ -49,27 +45,32 @@ class TP {
         this.lengthpercent = 0;
     }
     changeTo(pos) {
+        let that = this;
+        let lp = this.lengthpercent;
         return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-            let that = this;
-            let lp = this.lengthpercent;
             if (pos >= 0 && pos <= 100) {
                 let res = yield this.animate({
+                    // 每个独立的动画耗时500ms
                     duration: 500,
                     timing(timeFraction) {
+                        // linear
                         return timeFraction;
                     },
                     draw(progress) {
-                        if (that.lengthpercent < 100) {
-                            that.main.style.transform = `translateX(-${100 - (lp + (pos - lp) * progress)}%)`;
+                        if (that.lengthpercent <= 100) {
+                            that.main.style.width = `${(lp + (pos - lp) * progress)}%`;
                         }
                     },
                 });
-                this.lengthpercent = pos;
-                if (res === false) {
+                if (res.res === false) {
+                    that.lengthpercent += (pos - that.lengthpercent) * res.p;
                     resolve(false);
+                    return;
                 }
                 else {
+                    that.lengthpercent = pos;
                     resolve(true);
+                    return;
                 }
             }
         }));
@@ -86,7 +87,7 @@ class TP {
             this.state = "run";
             while (this.state == "run") {
                 let res = true;
-                if (0 <= this.lengthpercent && this.lengthpercent <= 40) {
+                if (0 <= this.lengthpercent && this.lengthpercent <= 30) {
                     res = yield this.changeTo(this.lengthpercent + 10);
                 }
                 else if (this.lengthpercent <= 75) {
@@ -107,54 +108,45 @@ class TP {
             }
         });
     }
+    stop() {
+        this.state = 'stop';
+    }
     done() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.state = "init";
-            let lp = this.lengthpercent;
-            this.lengthpercent = 100;
-            let that = this;
-            yield this.animate({
-                duration: 500,
-                timing(timeFraction) {
-                    return timeFraction;
-                },
-                draw(progress) {
-                    that.main.style.transform = `translateX(-${100 - (lp + (100 - lp) * progress)}%)`;
-                },
-            });
-            this.lengthpercent = 0;
-            yield this.animate({
-                duration: 500,
-                timing(timeFraction) {
-                    return timeFraction;
-                },
-                draw(progress) {
-                    that.main.style.transform = `translateX(-${100 * progress}%)`;
-                },
-            });
+            this.state = 'init';
+            yield this.changeTo(100);
+            yield this.changeTo(0);
             this.state = "stop";
         });
     }
     animate({ timing, draw, duration }) {
-        let _this = this;
         return new Promise((resolve) => {
+            let _this = this;
             let start = performance.now();
             requestAnimationFrame(function animate(time) {
+                let timeFraction = (time - start) / duration;
+                if (timeFraction > 1)
+                    timeFraction = 1;
+                let progress = timing(timeFraction);
                 if (_this.state == "run" || _this.state == "init") {
-                    let timeFraction = (time - start) / duration;
-                    if (timeFraction > 1)
-                        timeFraction = 1;
-                    let progress = timing(timeFraction);
                     draw(progress);
                     if (timeFraction < 1) {
                         requestAnimationFrame(animate);
                     }
                     else {
-                        resolve(true);
+                        resolve({
+                            res: true,
+                            p: 1
+                        });
+                        return;
                     }
                 }
                 else {
-                    resolve(false);
+                    resolve({
+                        res: false,
+                        p: progress
+                    });
+                    return;
                 }
             });
         });

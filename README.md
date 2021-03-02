@@ -5,9 +5,9 @@ this is a very very very light weight web progressbar at the top of the document
 
 ## Usage
 ### 在一般html中使用
-1.  add ```<script src="tp.js"></script>``` at the end of ```<body></body>```
+1.  add `<script src="tp.js"></script>` at the end of `<body></body>`
 
-    add```<link rel="stylesheet" href="./src/tp.style.css">```
+    add`<link rel="stylesheet" href="./src/tp.style.css">`
 
 2. add
     ```html
@@ -20,13 +20,13 @@ this is a very very very light weight web progressbar at the top of the document
     options:
      - color：进度条的颜色，默认为'lightblue'
      - width：宽度，默认为'2px'
-     - speed；类型为字符串，单位s
      - mount：挂载到哪个元素上，默认为body，格式符合querySelector
 
 3. 提供start、done、add三个函数
     - void start()：进度条滚动，若不主动执行done，则会越来越慢
     - void done()：进度条滚动到底，并且初始化
-    - int add(len)(废弃)：无条件增加len%，最大值为100%
+    - void stop()：进度条滚动到底，并且初始化
+    - int goto(position: number)
 
 4. example
     ```html
@@ -41,11 +41,14 @@ this is a very very very light weight web progressbar at the top of the document
         function start () {
             bar.start();
         }
-        function add(x) {
-            bar.add(x);
+        function goto(x) {
+            bar.goto(x);
         }
         function done () {
             bar.done();
+        }
+        function done () {
+            bar.stop();
         }
     </script>
     ```
@@ -66,7 +69,6 @@ Vue.config.productionTip = false
 let tp = new TP({
   color: 'red',
   width: '2px',
-  speed: '1',
   mount: 'body'
 })
 

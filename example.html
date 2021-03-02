@@ -13,22 +13,26 @@
     </section>
     <section style="text-align:center">
         <button onclick="start()">start</button>
-        <button onclick="add(10)">add 10</button>
+        <button onclick="goto(10)">add 10</button>
+        <button onclick="goto(90)">add 10</button>
         <button onclick="done()">done</button>
+        <button onclick="stop()">stop</button>
     </section>
     <script src="./dist/tp.js"></script>
     <script>
         const bar = new TP({
             mount: 'body',
-            color: 'lightblue',
             width: '2px',
-            speed: '1',
+            color: ''
         });
         function start () {
             bar.start();
         }
-        function add(x) {
-            bar.add(x);
+        function stop () {
+            bar.stop();
+        }
+        function goto(x) {
+            bar.goto(x);
         }
         function done () {
             bar.done();
